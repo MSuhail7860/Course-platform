@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  role      String    @default("STUDENT") // ADMIN, TEACHER, STUDENT
+  courses   Course[]
+  purchases Purchase[]
+}
+
+model Course {
+  id          String  @id @default(uuid())
+  userId      String
+  title       String
+  description String?
+  imageUrl    String?
+  price       Float?
+  isPublished Boolean @default(false)
+  categoryId  String?
+  
+  chapters    Chapter[]
+  purchases   Purchase[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  User        User     @relation(fields: [userId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  courses Course[]
+}
+
+model Chapter {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  videoUrl    String? // S3 URL
+  position    Int
+  isPublished Boolean @default(false)
+  isFree      Boolean @default(false) // Previewable
+  
+  courseId    String
+  course      Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  userProgress UserProgress[]
+}
+
+model UserProgress {
+  id        String   @id @default(uuid())
+  userId    String
+  chapterId String
+  isCompleted Boolean @default(false)
+  
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, chapterId])
+}
+
+model Purchase {
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, courseId])
+}
+
+model StripeCustomer {
+  id                String @id @default(uuid())
+  userId            String @unique
+  stripeCustomerId  String @unique
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
