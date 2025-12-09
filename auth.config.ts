@@ -1,5 +1,12 @@
-import type { NextAuthConfig } from "next-auth"
+import Credentials from "next-auth/providers/credentials";
+import type { NextAuthConfig } from "next-auth";
 
 export default {
-    providers: [],
-} satisfies NextAuthConfig
+    providers: [
+        Credentials({
+            async authorize(credentials) {
+                return null;
+            }
+        })
+    ],
+} satisfies NextAuthConfig;

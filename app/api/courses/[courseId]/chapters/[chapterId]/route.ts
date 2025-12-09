@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { courseId: string; chapterId: string } }
+    { params }: { params: Promise<{ courseId: string; chapterId: string }> }
 ) {
     try {
         const session = await auth();
@@ -60,12 +60,12 @@ export async function DELETE(
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { courseId: string; chapterId: string } }
+    { params }: { params: Promise<{ courseId: string; chapterId: string }> }
 ) {
     try {
         const session = await auth();
         const { courseId, chapterId } = await params;
-        const { isPublished, ...values } = await req.json();
+        const { isPublished: _isPublished, ...values } = await req.json();
 
         if (!session?.user?.id) {
             return new NextResponse("Unauthorized", { status: 401 });

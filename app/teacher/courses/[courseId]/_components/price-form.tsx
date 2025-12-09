@@ -28,7 +28,7 @@ interface PriceFormProps {
 };
 
 const formSchema = z.object({
-    price: z.coerce.number(),
+    price: z.coerce.number().optional(),
 });
 
 export const PriceForm = ({
@@ -42,7 +42,8 @@ export const PriceForm = ({
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             price: initialData.price || undefined,
         },
@@ -108,6 +109,7 @@ export const PriceForm = ({
                                             disabled={isSubmitting}
                                             placeholder="Set a price for your course"
                                             {...field}
+                                            value={field.value ?? ""}
                                         />
                                     </FormControl>
                                     <FormMessage />

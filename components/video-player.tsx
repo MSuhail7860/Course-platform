@@ -13,7 +13,6 @@ interface VideoPlayerProps {
     nextChapterId?: string;
     isLocked: boolean;
     completeOnEnd: boolean;
-    title: string;
     videoUrl: string;
 };
 
@@ -23,7 +22,6 @@ export const VideoPlayer = ({
     nextChapterId,
     isLocked,
     completeOnEnd,
-    title,
     videoUrl,
 }: VideoPlayerProps) => {
     const [isReady, setIsReady] = useState(false);

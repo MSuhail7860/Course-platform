@@ -1,7 +1,7 @@
 "use client";
 
 import ReactConfetti from "react-confetti";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type ConfettiStore = {
     isOpen: boolean;
@@ -22,10 +22,23 @@ export const ConfettiProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
+    const [isMounted, setIsMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const onOpen = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
+
+    if (!isMounted) {
+        return (
+             <ConfettiContext.Provider value={{ isOpen, onOpen, onClose }}>
+                {children}
+            </ConfettiContext.Provider>
+        );
+    }
 
     return (
         <ConfettiContext.Provider value={{ isOpen, onOpen, onClose }}>

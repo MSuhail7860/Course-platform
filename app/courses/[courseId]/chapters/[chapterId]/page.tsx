@@ -2,9 +2,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { File } from "lucide-react";
-
-import { getProgress } from "@/actions/get-progress";
 import { VideoPlayer } from "@/components/video-player";
 import { CourseProgressButton } from "@/components/course-progress-button";
 import { Separator } from "@/components/ui/separator";
@@ -96,7 +93,6 @@ const ChapterIdPage = async ({
                 <div className="p-4">
                     <VideoPlayer
                         chapterId={chapterId}
-                        title={chapter.title}
                         courseId={courseId}
                         nextChapterId={nextChapter?.id}
                         isLocked={isLocked}

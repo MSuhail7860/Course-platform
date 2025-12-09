@@ -13,6 +13,10 @@ const TeacherLayout = async ({
         return redirect("/");
     }
 
+    if (session.user.role !== "TEACHER" && session.user.role !== "ADMIN") {
+        return redirect("/");
+    }
+
     return (
         <div className="h-full">
             <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50 mt-16 bg-background border-r">

@@ -4,7 +4,7 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,6 @@ export const ChaptersForm = ({
     courseId
 }: ChaptersFormProps) => {
     const [isCreating, setIsCreating] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false);
 
     const toggleCreating = () => setIsCreating((current) => !current);
 

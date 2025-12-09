@@ -4,14 +4,13 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { getProgress } from "@/actions/get-progress";
 import { CourseSidebar } from "@/components/course-sidebar";
-import Navbar from "@/components/navbar"; // Reuse main navbar for now
 
 const CourseLayout = async ({
     children,
     params
 }: {
     children: React.ReactNode;
-    params: { courseId: string };
+    params: Promise<{ courseId: string }>;
 }) => {
     const session = await auth();
     const { courseId } = await params;

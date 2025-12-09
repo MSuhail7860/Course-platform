@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 // Force Node runtime for Webhook signature verification
 // Edge runtime often has issues with buffered bodies needed for signature construction
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
     }

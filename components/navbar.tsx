@@ -18,10 +18,17 @@ export default async function Navbar() {
                                 Browse
                             </Button>
                         </Link>
-                        {session.user?.role === "TEACHER" ? (
+                        {session.user?.role === "TEACHER" || session.user?.role === "ADMIN" ? (
                             <Link href="/teacher/courses">
                                 <Button size="sm" variant="ghost">
                                     Teacher Mode
+                                </Button>
+                            </Link>
+                        ) : null}
+                        {session.user?.role === "ADMIN" ? (
+                            <Link href="/admin/users">
+                                <Button size="sm" variant="ghost">
+                                    Admin Mode
                                 </Button>
                             </Link>
                         ) : null}
@@ -36,12 +43,18 @@ export default async function Navbar() {
                         </form>
                     </div>
                 ) : (
-                    <form action={async () => {
-                        "use server"
-                        await signIn()
-                    }}>
-                        <Button type="submit">Sign In</Button>
-                    </form>
+                    <div className="flex gap-x-2">
+                        <Link href="/auth/register">
+                            <Button size="sm" variant="ghost">
+                                Register
+                            </Button>
+                        </Link>
+                        <Link href="/auth/login">
+                            <Button size="sm">
+                                Sign In
+                            </Button>
+                        </Link>
+                    </div>
                 )}
             </div>
         </nav>

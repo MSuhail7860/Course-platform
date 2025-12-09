@@ -1,0 +1,23 @@
+import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+    try {
+        await db.category.createMany({
+            data: [
+                { name: "Computer Science" },
+                { name: "Music" },
+                { name: "Fitness" },
+                { name: "Photography" },
+                { name: "Accounting" },
+                { name: "Engineering" },
+                { name: "Filming" },
+            ],
+            skipDuplicates: true,
+        });
+        return NextResponse.json({ message: "Success" });
+    } catch (error) {
+        console.log("[SEED_ERROR]", error);
+        return new NextResponse("Internal Error", { status: 500 });
+    }
+}

@@ -7,8 +7,10 @@ import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { PriceForm } from "./_components/price-form";
 import { ChaptersForm } from "./_components/chapters-form";
+import { CategoryForm } from "./_components/category-form";
+import { CourseActions } from "./_components/course-actions";
 import { IconBadge } from "@/components/icon-badge";
-import { LayoutDashboard, ListChecks, DollarSign, File } from "lucide-react";
+import { LayoutDashboard, ListChecks, DollarSign } from "lucide-react";
 
 const CourseIdPage = async ({
     params
@@ -49,11 +51,19 @@ const CourseIdPage = async ({
         course.chapters.some(chapter => chapter.isPublished),
     ];
 
+    const isComplete = requiredFields.every(Boolean);
+
     const totalFields = requiredFields.length;
     // Count truthy values
     const completedFields = requiredFields.filter(Boolean).length;
 
     const completionText = `(${completedFields}/${totalFields})`;
+
+    const categories = await db.category.findMany({
+        orderBy: {
+            name: "asc",
+        },
+    });
 
     return (
         <div className="p-6">
@@ -66,6 +76,11 @@ const CourseIdPage = async ({
                         Complete all fields {completionText}
                     </span>
                 </div>
+                <CourseActions
+                    disabled={!isComplete}
+                    courseId={course.id}
+                    isPublished={course.isPublished}
+                />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
                 <div>
@@ -86,6 +101,14 @@ const CourseIdPage = async ({
                     <ImageForm
                         initialData={course}
                         courseId={course.id}
+                    />
+                    <CategoryForm
+                        initialData={course}
+                        courseId={course.id}
+                        options={categories.map((category) => ({
+                            label: category.name,
+                            value: category.id,
+                        }))}
                     />
                 </div>
                 <div className="space-y-6">

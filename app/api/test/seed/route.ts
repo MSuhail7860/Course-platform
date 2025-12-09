@@ -2,7 +2,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         await db.category.createMany({
             data: [

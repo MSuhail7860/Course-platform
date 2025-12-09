@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { FileUpload } from "@/components/file-upload";
 
 interface ChapterVideoFormProps {
     initialData: {
@@ -120,10 +121,13 @@ export const ChapterVideoForm = ({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
-                                                disabled={isSubmitting}
-                                                placeholder="e.g. 'https://.../video.mp4'"
-                                                {...field}
+                                            <FileUpload
+                                                endpoint="chapterVideo"
+                                                onChange={(url) => {
+                                                    if (url) {
+                                                        onSubmit({ videoUrl: url });
+                                                    }
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
