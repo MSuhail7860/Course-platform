@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { useConfettiStore } from "@/components/providers/confetti-provider";
+import { ConfirmModal } from "@/components/modals/confirm-modal";
 
 interface CourseActionsProps {
     disabled: boolean;
@@ -15,6 +16,7 @@ interface CourseActionsProps {
     isPublished: boolean;
 };
 
+// FIX: Renamed from "Actions" to "CourseActions" to match what your page expects
 export const CourseActions = ({
     disabled,
     courseId,
@@ -68,12 +70,16 @@ export const CourseActions = ({
                 disabled={disabled || isLoading}
                 variant="outline"
                 size="sm"
+                // Dark mode styling
+                className="dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
             >
                 {isPublished ? "Unpublish" : "Publish"}
             </Button>
-            <Button size="sm" variant="destructive" disabled={isLoading} onClick={onDelete}>
-                <Trash className="h-4 w-4" />
-            </Button>
+            <ConfirmModal onConfirm={onDelete}>
+                <Button size="sm" variant="destructive" disabled={isLoading}>
+                    <Trash className="h-4 w-4" />
+                </Button>
+            </ConfirmModal>
         </div>
     )
 }

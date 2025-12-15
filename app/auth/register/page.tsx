@@ -8,13 +8,13 @@ const RegisterPage = () => {
                 <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
                 <RegisterForm />
                 <div className="mt-4 text-center text-sm">
-                    <Link href="/api/auth/signin" className="underline">
-                        Already have an account? Sign in
+                    <Link href="/auth/login" className="underline">
+                        Already have an account? Login
                     </Link>
                 </div>
             </div>
         </div>
     );
 }
- 
+
 export default RegisterPage;

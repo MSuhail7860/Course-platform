@@ -4,29 +4,48 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { register } from "@/actions/register"; // We will create this
+import { register } from "@/actions/register"; // Make sure to import from your actions folder
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+
+// --- Reusable Error/Success components (Same as Login) ---
+const FormError = ({ message }: { message?: string }) => {
+    if (!message) return null;
+    return (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-4">
+            <p>{message}</p>
+        </div>
+    );
+};
+
+const FormSuccess = ({ message }: { message?: string }) => {
+    if (!message) return null;
+    return (
+        <div className="bg-emerald-500/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-emerald-500 mb-4">
+            <p>{message}</p>
+        </div>
+    );
+};
+// --------------------------------------------------------
 
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.string().email({ message: "Email is required" }),
+    password: z.string().min(6, { message: "Minimum 6 characters required" }),
 });
 
 export const RegisterForm = () => {
-    const router = useRouter();
+    const [error, setError] = useState<string | undefined>("");
+    const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -34,27 +53,51 @@ export const RegisterForm = () => {
         defaultValues: {
             email: "",
             password: "",
+            name: "",
         },
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
+        setError("");
+        setSuccess("");
+
         startTransition(() => {
             register(values)
                 .then((data) => {
                     if (data.error) {
+                        setError(data.error);
                         toast.error(data.error);
-                    } else if (data.success) {
-                        toast.success(data.success);
-                        router.push("/api/auth/signin");
+                    }
+                    if (data.success) {
+                        setSuccess(data.success);
+                        toast.success("Account created successfully!");
+                        // Optional: Redirect to login page here if you want
                     }
                 });
         });
-    }
+    };
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="space-y-4">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Name</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        disabled={isPending}
+                                        placeholder="John Doe"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="email"
@@ -92,6 +135,10 @@ export const RegisterForm = () => {
                         )}
                     />
                 </div>
+
+                <FormError message={error} />
+                <FormSuccess message={success} />
+
                 <Button
                     type="submit"
                     className="w-full"

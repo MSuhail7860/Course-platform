@@ -29,6 +29,10 @@ const CourseIdPage = async ({
         return redirect("/");
     }
 
+    if (course.chapters.length === 0) {
+        return redirect("/");
+    }
+
     return redirect(`/courses/${course.id}/chapters/${course.chapters[0].id}`);
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, List } from "lucide-react";
+import { LayoutDashboard, List, BarChart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ const routes = [
         href: "/teacher/courses",
     },
     {
-        icon: LayoutDashboard,
+        icon: BarChart,
         label: "Analytics",
         href: "/teacher/analytics",
     },
@@ -22,11 +22,15 @@ export const TeacherSidebar = () => {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col w-full h-full border-r overflow-y-auto bg-white shadow-sm">
+        // FIX: Added dark:bg-gray-900 and dark:border-gray-800
+        <div className="flex flex-col w-full h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
             <div className="p-6">
-                <span className="text-xl font-bold">Teacher Mode</span>
+                <span className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+                    Teacher Mode
+                </span>
             </div>
-            <div className="flex flex-col w-full">
+
+            <div className="flex flex-col w-full px-3 gap-y-1">
                 {routes.map((route) => {
                     const isActive = (pathname === route.href) || (pathname?.startsWith(`${route.href}/`));
 
@@ -35,18 +39,23 @@ export const TeacherSidebar = () => {
                             key={route.href}
                             href={route.href}
                             className={cn(
-                                "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
-                                isActive && "text-sky-700 bg-sky-200/20 hover:bg-sky-200/20 hover:text-sky-700 decoration-sky-700"
+                                "flex items-center gap-x-2 text-sm font-medium px-3 py-3 rounded-lg transition-all",
+                                // Light Mode Styles
+                                "text-gray-500 hover:text-gray-900 hover:bg-gray-100",
+                                // Dark Mode Styles (This fixes the text visibility)
+                                "dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800",
+                                // Active State (Darker background for active link)
+                                isActive && "text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-gray-100"
                             )}
                         >
-                            <div className="flex items-center gap-x-2 py-4">
-                                <route.icon size={22} className={cn("text-slate-500", isActive && "text-sky-700")} />
-                                {route.label}
-                            </div>
-                            <div className={cn(
-                                "ml-auto opacity-0 border-2 border-sky-700 h-full transition-all",
-                                isActive && "opacity-100"
-                            )} />
+                            <route.icon
+                                size={20}
+                                className={cn(
+                                    "text-gray-400 dark:text-gray-500",
+                                    isActive && "text-gray-900 dark:text-gray-100"
+                                )}
+                            />
+                            {route.label}
                         </Link>
                     )
                 })}

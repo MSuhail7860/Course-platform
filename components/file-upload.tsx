@@ -7,13 +7,13 @@ import { toast } from "sonner";
 import axios from "axios";
 
 interface FileUploadProps {
-  onChange: (url?: string) => void;
-  endpoint: "courseImage" | "courseAttachment" | "chapterVideo"; // Endpoint is ignored for local upload simplicity, but kept for interface compatibility
+    onChange: (url?: string) => void;
+    endpoint: "courseImage" | "courseAttachment" | "chapterVideo";
 }
 
 export const FileUpload = ({
-  onChange,
-  endpoint
+    onChange,
+    endpoint
 }: FileUploadProps) => {
     const [isLoading, setIsLoading] = useState(false);
 
@@ -44,12 +44,17 @@ export const FileUpload = ({
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         maxFiles: 1,
-        accept: endpoint === "chapterVideo" ? { 'video/mp4': ['.mp4', '.mkv', '.webm'] } : { 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] } 
+
+        accept: endpoint === "chapterVideo"
+            ? { 'video/mp4': ['.mp4', '.mkv', '.webm'] }
+            : endpoint === "courseImage"
+                ? { 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }
+                : undefined
     });
 
     return (
-        <div 
-            {...getRootProps()} 
+        <div
+            {...getRootProps()}
             className="border-dashed border-2 border-slate-300 p-10 rounded-md flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition"
         >
             <input {...getInputProps()} />

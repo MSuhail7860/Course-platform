@@ -4,7 +4,6 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -17,16 +16,39 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { login } from "@/actions/login";
+import { login } from "@/actions/login"; // Ensure this path is correct
 import { toast } from "sonner";
 
+// --- Minimal Error/Success Components (You can extract these to separate files) ---
+const FormError = ({ message }: { message?: string }) => {
+  if (!message) return null;
+  return (
+    <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive">
+      <p>{message}</p>
+    </div>
+  );
+};
+
+const FormSuccess = ({ message }: { message?: string }) => {
+  if (!message) return null;
+  return (
+    <div className="bg-emerald-500/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-emerald-500">
+      <p>{message}</p>
+    </div>
+  );
+};
+// ----------------------------------------------------------------------------------
+
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().email({ message: "Email is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  // Handle existing URL errors (e.g. OAuth failures)
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
     ? "Email already in use with different provider!"
     : "";
@@ -44,19 +66,25 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    // Clear previous states
     setError("");
     setSuccess("");
-    
+
     startTransition(() => {
       login(values)
         .then((data) => {
+          // Note: If login is successful, the server action redirects (throws),
+          // so this .then block might not even finish executing or data will be undefined.
           if (data?.error) {
             form.reset();
             setError(data.error);
             toast.error(data.error);
           }
+
+          // If you added Two-Factor Auth support later, you would handle success here:
+          // if (data?.success) { setSuccess(data.success) }
         })
-        .catch(() => toast.error("Something went wrong"));
+        .catch(() => setError("Something went wrong"));
     });
   };
 
@@ -101,12 +129,18 @@ export const LoginForm = () => {
             )}
           />
         </div>
+
+        {/* --- CRITICAL FIX: Render the error/success states --- */}
+        <FormError message={error || urlError} />
+        <FormSuccess message={success} />
+        {/* ---------------------------------------------------- */}
+
         <Button
           type="submit"
           className="w-full"
           disabled={isPending}
         >
-          Login
+          {isPending ? "Logging in..." : "Login"}
         </Button>
       </form>
     </Form>

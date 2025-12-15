@@ -1,0 +1,3 @@
+app/(dashboard)/(routes)/admin/requests/page.tsx(48,29): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+app/api/auth/[...nextauth]/route.ts(1,10): error TS2305: Module '"@/auth"' has no exported member 'handlers'.
