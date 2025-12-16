@@ -119,8 +119,8 @@ export default function LandingPage({ courses }: LandingPageProps) {
                                 key={cat}
                                 onClick={() => setSelectedCategory(cat)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${selectedCategory === cat
-                                        ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-black dark:border-white"
-                                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700 dark:hover:bg-neutral-700"
+                                    ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-black dark:border-white"
+                                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700 dark:hover:bg-neutral-700"
                                     }`}
                             >
                                 {cat}
@@ -192,11 +192,20 @@ export default function LandingPage({ courses }: LandingPageProps) {
             </section>
 
             <section className="py-24 bg-slate-100 dark:bg-black border-t border-slate-200 dark:border-neutral-900 text-center">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">Start Your Coding Journey</h2>
-                <p className="text-slate-500 dark:text-neutral-400 mb-8">Learn coding step-by-step with the best programming resources.</p>
-                <button className="px-8 py-3 bg-black text-white dark:bg-white dark:text-black font-bold rounded-md hover:bg-slate-800 dark:hover:bg-neutral-200 transition-colors">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+                    Start Your Coding Journey
+                </h2>
+                <p className="text-slate-500 dark:text-neutral-400 mb-8">
+                    Learn coding step-by-step with the best programming resources.
+                </p>
+
+                {/* CORRECT WAY: Apply styles directly to the Link */}
+                <Link
+                    href="/search"
+                    className="inline-block px-8 py-3 bg-black text-white dark:bg-white dark:text-black font-bold rounded-md hover:bg-slate-800 dark:hover:bg-neutral-200 transition-colors"
+                >
                     Start Now
-                </button>
+                </Link>
             </section>
 
         </div>
