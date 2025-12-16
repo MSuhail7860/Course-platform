@@ -4,7 +4,6 @@ import "next-auth/jwt"
 declare module "next-auth" {
     interface Session {
         user: {
-            id: string // Added id property
             role?: "ADMIN" | "TEACHER" | "STUDENT"
         } & DefaultSession["user"]
     }

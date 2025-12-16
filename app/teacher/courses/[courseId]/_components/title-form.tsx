@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
     Form,
@@ -24,7 +24,7 @@ interface TitleFormProps {
         title: string;
     };
     courseId: string;
-}
+};
 
 const formSchema = z.object({
     title: z.string().min(1, {
@@ -61,11 +61,10 @@ export const TitleForm = ({
     }
 
     return (
-        // FIX: Changed bg-slate-900 to dark:bg-slate-900
-        <div className="mt-6 border bg-slate-900 dark:bg-slate-900 rounded-md p-4 dark:border-slate-800">
-            <div className="font-medium flex items-center justify-between dark:text-slate-100">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center justify-between">
                 Course title
-                <Button onClick={toggleEdit} variant="ghost" className="dark:text-slate-200 dark:hover:bg-slate-900">
+                <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -77,13 +76,16 @@ export const TitleForm = ({
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-sm mt-2 dark:text-slate-300">
+                <p className="text-sm mt-2">
                     {initialData.title}
                 </p>
             )}
             {isEditing && (
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-4 mt-4"
+                    >
                         <FormField
                             control={form.control}
                             name="title"
@@ -94,8 +96,6 @@ export const TitleForm = ({
                                             disabled={isSubmitting}
                                             placeholder="e.g. 'Advanced Web Development'"
                                             {...field}
-                                            // FIX: Make input dark in dark mode
-                                            className="bg-white dark:bg-slate-950 dark:text-white dark:border-slate-800"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -106,7 +106,6 @@ export const TitleForm = ({
                             <Button
                                 disabled={!isValid || isSubmitting}
                                 type="submit"
-                                className="dark:bg-slate-900 dark:text-slate-900"
                             >
                                 Save
                             </Button>

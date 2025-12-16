@@ -1,115 +1,62 @@
-"use client";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { auth, signIn, signOut } from "@/auth"
 
-import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
-import { LogOut, Menu, ShieldCheck } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
-import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const Navbar = () => {
-    const { data: session, status } = useSession();
-    const pathname = usePathname();
-
-    const isTeacherPage = pathname?.startsWith("/teacher");
-    const isAdminPage = pathname?.startsWith("/admin");
-    const isPlayerPage = pathname?.includes("/chapter");
-
-    const isAuthPage = pathname?.startsWith("/auth");
-
-    if (isPlayerPage || isAuthPage) return null;
+export default async function Navbar() {
+    const session = await auth();
 
     return (
-        <div className="p-4 border-b flex items-center bg-background shadow-sm">
-
-            {/* Mobile Menu Trigger */}
-            <div className="md:hidden pr-4">
-                <Menu />
+        <nav className="border-b bg-background h-16 flex items-center px-4 container mx-auto">
+            <div className="flex-1">
+                <Link href="/" className="font-bold text-xl">CoursePlatform</Link>
             </div>
-
-            {/* Logo */}
-            <Link href="/" className="font-bold text-xl flex items-center mr-auto hover:opacity-75 transition">
-                CoursePlatform
-            </Link>
-
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-x-2 ml-auto">
-
-                {/* --- 1. ADMIN MODE BUTTON (Only if logged in) --- */}
-                {session?.user && (
-                    <>
-                        {isAdminPage || isTeacherPage ? (
-                            <Link href="/">
-                                <Button size="sm" variant="ghost">
-                                    <LogOut className="h-4 w-4 mr-2" />
-                                    Exit
-                                </Button>
-                            </Link>
-                        ) : session.user.role === "ADMIN" ? (
+            <div className="flex gap-x-2">
+                {session ? (
+                    <div className="flex items-center gap-x-2">
+                        <Link href="/search">
+                            <Button size="sm" variant="ghost">
+                                Browse
+                            </Button>
+                        </Link>
+                        {session.user?.role === "TEACHER" || session.user?.role === "ADMIN" ? (
                             <Link href="/teacher/courses">
                                 <Button size="sm" variant="ghost">
-                                    <ShieldCheck className="h-4 w-4 mr-2" />
+                                    Teacher Mode
+                                </Button>
+                            </Link>
+                        ) : null}
+                        {session.user?.role === "ADMIN" ? (
+                            <Link href="/admin/users">
+                                <Button size="sm" variant="ghost">
                                     Admin Mode
                                 </Button>
                             </Link>
                         ) : null}
-                    </>
-                )}
-
-                <ModeToggle />
-
-                {/* --- 2. AUTH BUTTONS --- */}
-                {status === "loading" ? (
-                    <div className="h-8 w-8 rounded-full bg-slate-100 animate-pulse" />
-                ) : session?.user ? (
-                    // LOGGED IN: Show Profile
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="outline-none">
-                            <div className="h-10 w-10 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center overflow-hidden hover:shadow-md transition">
-                                {session.user.image ? (
-                                    <img src={session.user.image} alt="Profile" className="h-full w-full object-cover" />
-                                ) : (
-                                    <span className="text-lg font-bold text-slate-700">
-                                        {session.user.name?.[0]?.toUpperCase() || "U"}
-                                    </span>
-                                )}
-                            </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                            <div className="p-2 text-sm text-gray-500 font-medium border-b mb-1">
-                                {session.user.email} <br />
-                                <span className="text-xs font-bold text-blue-600">{session.user.role}</span>
-                            </div>
-                            <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-600 focus:text-red-600">
-                                <LogOut className="h-4 w-4 mr-2" />
-                                Log out
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        <span className="text-sm font-medium mr-2">
+                            {session.user?.email} ({session.user?.role})
+                        </span>
+                        <form action={async () => {
+                            "use server"
+                            await signOut()
+                        }}>
+                            <Button type="submit" variant="ghost">Sign Out</Button>
+                        </form>
+                    </div>
                 ) : (
-                    // GUEST: Show Register & Sign In
                     <div className="flex gap-x-2">
-                        <Button size="sm" variant="default" asChild>
-                            <Link href="/auth/register">
+                        <Link href="/auth/register">
+                            <Button size="sm" variant="ghost">
                                 Register
-                            </Link>
-                        </Button>
-                        <Button size="sm" variant="outline" asChild>
-                            <Link href="/auth/login">
+                            </Button>
+                        </Link>
+                        <Link href="/auth/login">
+                            <Button size="sm">
                                 Sign In
-                            </Link>
-                        </Button>
+                            </Button>
+                        </Link>
                     </div>
                 )}
             </div>
-        </div>
-    );
-};
-
-export default Navbar;
+        </nav>
+    )
+}

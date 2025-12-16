@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card"; // Import Card to wrap the form
 
 const formSchema = z.object({
     title: z.string().min(1, {
@@ -50,71 +49,58 @@ const CreatePage = () => {
 
     return (
         <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
-            <div className="w-full max-w-2xl"> {/* Constrain width for better focus */}
-
-                {/* Header Section */}
-                <div className="mb-8 space-y-2 text-center md:text-left">
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        Name your course
-                    </h1>
-                    <p className="text-gray-500">
-                        What would you like to name your course? Don&apos;t worry, you can change this later.
-                    </p>
-                </div>
-
-                {/* Form Wrapped in Card */}
-                <Card className="border-gray-200 shadow-sm">
-                    <CardContent className="p-8">
-                        <Form {...form}>
-                            <form
-                                onSubmit={form.handleSubmit(onSubmit)}
-                                className="space-y-8"
+            <div>
+                <h1 className="text-2xl font-medium">
+                    Name your course
+                </h1>
+                <p className="text-sm text-slate-600">
+                    What would you like to name your course? Don&apos;t worry, you can change this later.
+                </p>
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-8 mt-8"
+                    >
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Course title
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={isSubmitting}
+                                            placeholder="e.g. 'Advanced Web Development'"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        What will you teach in this course?
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <div className="flex items-center gap-x-2">
+                            <Link href="/">
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                >
+                                    Cancel
+                                </Button>
+                            </Link>
+                            <Button
+                                type="submit"
+                                disabled={!isValid || isSubmitting}
                             >
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-700 font-medium">
-                                                Course Title
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    disabled={isSubmitting}
-                                                    placeholder="e.g. 'Advanced Web Development'"
-                                                    className="bg-gray-50 border-gray-200 focus:bg-white transition-colors" // Subtle background shift on focus
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormDescription className="text-gray-400">
-                                                What will you teach in this course?
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="flex items-center gap-x-2 pt-2">
-                                    <Link href="/">
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            className="text-gray-500 hover:text-gray-900"
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </Link>
-                                    <Button
-                                        type="submit"
-                                        disabled={!isValid || isSubmitting}
-                                        className="bg-gray-900 hover:bg-gray-800 text-white" // Explicitly dark button
-                                    >
-                                        Continue
-                                    </Button>
-                                </div>
-                            </form>
-                        </Form>
-                    </CardContent>
-                </Card>
+                                Continue
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
             </div>
         </div>
     );

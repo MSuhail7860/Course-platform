@@ -6,9 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 import {
     Form,
@@ -18,6 +17,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 
 interface DescriptionFormProps {
@@ -25,7 +25,7 @@ interface DescriptionFormProps {
         description: string | null;
     };
     courseId: string;
-}
+};
 
 const formSchema = z.object({
     description: z.string().min(1, {
@@ -38,13 +38,15 @@ export const DescriptionForm = ({
     courseId
 }: DescriptionFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
+
     const toggleEdit = () => setIsEditing((current) => !current);
+
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            description: initialData?.description || ""
+            description: initialData.description || ""
         },
     });
 
@@ -62,10 +64,10 @@ export const DescriptionForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-slate-900 rounded-md p-4 border-slate-800">
-            <div className="font-medium flex items-center justify-between text-slate-100">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center justify-between">
                 Course description
-                <Button onClick={toggleEdit} variant="ghost" className="text-slate-200 hover:text-white hover:bg-slate-800">
+                <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -79,15 +81,17 @@ export const DescriptionForm = ({
             {!isEditing && (
                 <p className={cn(
                     "text-sm mt-2",
-                    !initialData.description && "text-slate-500 italic",
-                    "text-slate-300"
+                    !initialData.description && "text-slate-500 italic"
                 )}>
                     {initialData.description || "No description"}
                 </p>
             )}
             {isEditing && (
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-4 mt-4"
+                    >
                         <FormField
                             control={form.control}
                             name="description"
@@ -98,7 +102,6 @@ export const DescriptionForm = ({
                                             disabled={isSubmitting}
                                             placeholder="e.g. 'This course is about...'"
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 text-slate-200 focus-visible:ring-slate-600"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -106,11 +109,9 @@ export const DescriptionForm = ({
                             )}
                         />
                         <div className="flex items-center gap-x-2">
-                            {/* FIX: Changed button style to be visible on dark background */}
                             <Button
                                 disabled={!isValid || isSubmitting}
                                 type="submit"
-                                className="bg-slate-100 text-slate-900 hover:bg-slate-200"
                             >
                                 Save
                             </Button>

@@ -1,17 +1,16 @@
+
 import { db } from "@/lib/db";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react"; // Added missing icons
-
-import { IconBadge } from "@/components/icon-badge";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
-import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
-import { AttachmentForm } from "./_components/attachment-form";
 import { ChaptersForm } from "./_components/chapters-form";
+import { CategoryForm } from "./_components/category-form";
 import { CourseActions } from "./_components/course-actions";
+import { IconBadge } from "@/components/icon-badge";
+import { LayoutDashboard, ListChecks, DollarSign } from "lucide-react";
 
 const CourseIdPage = async ({
     params
@@ -19,7 +18,6 @@ const CourseIdPage = async ({
     params: { courseId: string }
 }) => {
     const session = await auth();
-    // Await params if using Next.js 15+, otherwise access directly
     const { courseId } = await params;
 
     if (!session?.user?.id) {
@@ -37,18 +35,6 @@ const CourseIdPage = async ({
                     position: "asc",
                 },
             },
-            attachments: {
-                orderBy: {
-                    createdAt: "desc",
-                },
-            },
-        },
-    });
-
-    // 1. Fetch Categories for the dropdown
-    const categories = await db.category.findMany({
-        orderBy: {
-            name: "asc",
         },
     });
 
@@ -65,22 +51,28 @@ const CourseIdPage = async ({
         course.chapters.some(chapter => chapter.isPublished),
     ];
 
+    const isComplete = requiredFields.every(Boolean);
+
     const totalFields = requiredFields.length;
+    // Count truthy values
     const completedFields = requiredFields.filter(Boolean).length;
 
     const completionText = `(${completedFields}/${totalFields})`;
 
-    const isComplete = requiredFields.every(Boolean);
+    const categories = await db.category.findMany({
+        orderBy: {
+            name: "asc",
+        },
+    });
 
     return (
         <div className="p-6">
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-y-2">
-                    {/* FIX: Added dark mode text color */}
-                    <h1 className="text-2xl font-medium dark:text-slate-100">
+                    <h1 className="text-2xl font-medium">
                         Course setup
                     </h1>
-                    <span className="text-sm text-slate-700 dark:text-slate-400">
+                    <span className="text-sm text-slate-700">
                         Complete all fields {completionText}
                     </span>
                 </div>
@@ -94,7 +86,7 @@ const CourseIdPage = async ({
                 <div>
                     <div className="flex items-center gap-x-2">
                         <IconBadge icon={LayoutDashboard} />
-                        <h2 className="text-xl font-medium dark:text-slate-100">
+                        <h2 className="text-xl">
                             Customize your course
                         </h2>
                     </div>
@@ -123,7 +115,7 @@ const CourseIdPage = async ({
                     <div>
                         <div className="flex items-center gap-x-2">
                             <IconBadge icon={ListChecks} />
-                            <h2 className="text-xl font-medium dark:text-slate-100">
+                            <h2 className="text-xl">
                                 Course chapters
                             </h2>
                         </div>
@@ -134,25 +126,12 @@ const CourseIdPage = async ({
                     </div>
                     <div>
                         <div className="flex items-center gap-x-2">
-                            <IconBadge icon={CircleDollarSign} />
-                            <h2 className="text-xl font-medium dark:text-slate-100">
+                            <IconBadge icon={DollarSign} />
+                            <h2 className="text-xl">
                                 Sell your course
                             </h2>
                         </div>
                         <PriceForm
-                            initialData={course}
-                            courseId={course.id}
-                        />
-                    </div>
-                    {/* FIX: Added missing Attachment/Resources section */}
-                    <div>
-                        <div className="flex items-center gap-x-2">
-                            <IconBadge icon={File} />
-                            <h2 className="text-xl font-medium dark:text-slate-100">
-                                Resources & Attachments
-                            </h2>
-                        </div>
-                        <AttachmentForm
                             initialData={course}
                             courseId={course.id}
                         />

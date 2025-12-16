@@ -11,7 +11,7 @@ type CourseWithProgressWithCategory = Course & {
 };
 
 type GetCourses = {
-    userId: string | null;
+    userId: string;
     title?: string;
     categoryId?: string;
 };
@@ -43,7 +43,7 @@ export const getCourses = async ({
                 },
                 purchases: {
                     where: {
-                        userId: userId || "", // Avoid fetching purchases if no userId
+                        userId,
                     }
                 }
             },
@@ -54,10 +54,10 @@ export const getCourses = async ({
 
         const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
             courses.map(async (course) => {
-                if (course.purchases.length === 0 || !userId) {
+                if (course.purchases.length === 0) {
                     return {
                         ...course,
-                        progress: null,
+                        progress: null, // Not purchased
                     }
                 }
 

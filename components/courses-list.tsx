@@ -18,8 +18,7 @@ export const CoursesList = ({
 }: CoursesListProps) => {
     return (
         <div>
-            {/* CHANGED: gap-4 -> gap-6 for better spacing */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {items.map((item) => (
                     <CourseCard
                         key={item.id}

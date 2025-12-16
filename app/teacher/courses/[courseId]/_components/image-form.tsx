@@ -2,21 +2,30 @@
 
 import * as z from "zod";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Pencil, PlusCircle, ImageIcon } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/file-upload";
+import { Input } from "@/components/ui/input";
 
 interface ImageFormProps {
     initialData: {
         imageUrl: string | null;
     };
     courseId: string;
-}
+};
 
 const formSchema = z.object({
     imageUrl: z.string().min(1, {
@@ -34,6 +43,15 @@ export const ImageForm = ({
 
     const router = useRouter();
 
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            imageUrl: initialData.imageUrl || "",
+        },
+    });
+
+    const { isSubmitting, isValid } = form.formState;
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             await axios.patch(`/api/courses/${courseId}`, values);
@@ -46,11 +64,10 @@ export const ImageForm = ({
     }
 
     return (
-        // FIX: Added dark:bg-slate-900
-        <div className="mt-6 border bg-slate-900 dark:bg-slate-900 rounded-md p-4 dark:border-slate-800">
-            <div className="font-medium flex items-center justify-between dark:text-slate-100">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center justify-between">
                 Course image
-                <Button onClick={toggleEdit} variant="ghost" className="dark:text-slate-200 dark:hover:bg-slate-900">
+                <Button onClick={toggleEdit} variant="ghost">
                     {isEditing && (
                         <>Cancel</>
                     )}
@@ -70,8 +87,7 @@ export const ImageForm = ({
             </div>
             {!isEditing && (
                 !initialData.imageUrl ? (
-                    // FIX: Empty state background
-                    <div className="flex items-center justify-center h-60 bg-slate-900 dark:bg-slate-900 rounded-md">
+                    <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
                         <ImageIcon className="h-10 w-10 text-slate-500" />
                     </div>
                 ) : (
@@ -86,18 +102,39 @@ export const ImageForm = ({
                 )
             )}
             {isEditing && (
-                <div>
-                    <FileUpload
-                        endpoint="courseImage"
-                        onChange={(url) => {
-                            if (url) {
-                                onSubmit({ imageUrl: url });
-                            }
-                        }}
-                    />
-                    <div className="text-xs text-muted-foreground mt-4 dark:text-slate-400">
-                        16:9 aspect ratio recommended
-                    </div>
+                <div className="mt-4">
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4"
+                        >
+                            <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                disabled={isSubmitting}
+                                                placeholder="e.g. 'https://images.unsplash.com/...'"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="text-xs text-muted-foreground mt-4">
+                                16:9 aspect ratio recommended
+                            </div>
+                            <Button
+                                disabled={!isValid || isSubmitting}
+                                type="submit"
+                            >
+                                Save
+                            </Button>
+                        </form>
+                    </Form>
                 </div>
             )}
         </div>

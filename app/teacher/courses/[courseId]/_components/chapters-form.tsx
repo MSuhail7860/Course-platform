@@ -4,12 +4,12 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Chapter, Course } from "@prisma/client";
-import Link from "next/link";
+import Link from "next/link"; // Import Link
 
 import {
     Form,
@@ -36,7 +36,6 @@ export const ChaptersForm = ({
     courseId
 }: ChaptersFormProps) => {
     const [isCreating, setIsCreating] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false); // Added state for potential reordering updates
 
     const toggleCreating = () => setIsCreating((current) => !current);
 
@@ -63,16 +62,10 @@ export const ChaptersForm = ({
     }
 
     return (
-        // FIX: Added dark:bg-slate-900 and dark:border-slate-800
-        <div className="relative mt-6 border bg-slate-900 dark:bg-slate-900 rounded-md p-4 dark:border-slate-800">
-            {isUpdating && (
-                <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-m flex items-center justify-center z-10">
-                    <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
-                </div>
-            )}
-            <div className="font-medium flex items-center justify-between dark:text-slate-100">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center justify-between">
                 Course chapters
-                <Button onClick={toggleCreating} variant="ghost" className="dark:text-slate-200 dark:hover:bg-slate-900">
+                <Button onClick={toggleCreating} variant="ghost">
                     {isCreating ? (
                         <>Cancel</>
                     ) : (
@@ -99,8 +92,6 @@ export const ChaptersForm = ({
                                             disabled={isSubmitting}
                                             placeholder="e.g. 'Introduction to the course'"
                                             {...field}
-                                            // FIX: Dark mode input styles
-                                            className="bg-white dark:bg-slate-950 dark:text-white dark:border-slate-800"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -110,7 +101,6 @@ export const ChaptersForm = ({
                         <Button
                             disabled={!isValid || isSubmitting}
                             type="submit"
-                            className="dark:bg-slate-900 dark:text-slate-900"
                         >
                             Create
                         </Button>
@@ -120,38 +110,22 @@ export const ChaptersForm = ({
             {!isCreating && (
                 <div className={cn(
                     "text-sm mt-2",
-                    !initialData.chapters.length && "text-slate-500 italic",
-                    // FIX: Dark mode text color
-                    "dark:text-slate-300"
+                    !initialData.chapters.length && "text-slate-500 italic"
                 )}>
                     {!initialData.chapters.length && "No chapters"}
                     {initialData.chapters.map((chapter) => (
                         <Link key={chapter.id} href={`/teacher/courses/${courseId}/chapters/${chapter.id}`} className="block mb-2">
-                            <div className={cn(
-                                "flex items-center gap-x-2 border rounded-md text-sm p-2 transition cursor-pointer",
-                                // Light Mode Styles
-                                "bg-slate-900 border-slate-200 text-slate-700 hover:bg-slate-300",
-                                // Dark Mode Styles (FIXED)
-                                "dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700"
-                            )}>
+                            <div className="flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md text-sm p-2 hover:bg-slate-300 transition cursor-pointer">
                                 {chapter.title}
-                                {chapter.isPublished && (
-                                    <span className="ml-auto text-xs bg-sky-700 text-white px-2 py-1 rounded-full">
-                                        Published
-                                    </span>
-                                )}
-                                {!chapter.isPublished && (
-                                    <span className="ml-auto text-xs bg-slate-500 text-white px-2 py-1 rounded-full">
-                                        Draft
-                                    </span>
-                                )}
+                                {chapter.isPublished && <span className="ml-auto text-xs bg-sky-700 text-white px-2 py-1 rounded-full">Published</span>}
+                                {!chapter.isPublished && <span className="ml-auto text-xs bg-slate-500 text-white px-2 py-1 rounded-full">Draft</span>}
                             </div>
                         </Link>
                     ))}
                 </div>
             )}
             {!isCreating && (
-                <p className="text-xs text-muted-foreground mt-4 dark:text-slate-400">
+                <p className="text-xs text-muted-foreground mt-4">
                     Drag and drop to reorder the chapters
                 </p>
             )}

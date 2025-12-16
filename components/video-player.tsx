@@ -55,7 +55,7 @@ export const VideoPlayer = ({
           For simple video tag, it's virtually instant or shows native loader. 
       */}
             {!isReady && !isLocked && (
-                <div className="absolute inset-0 flex items-center justify-center bg-slate-900">
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
                     <Loader2 className="h-8 w-8 animate-spin text-secondary" />
                 </div>
             )}

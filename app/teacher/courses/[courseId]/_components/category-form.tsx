@@ -72,10 +72,10 @@ export const CategoryForm = ({
     const selectedOption = options.find((option) => option.value === initialData.categoryId);
 
     return (
-        <div className="mt-6 border bg-slate-900 rounded-md p-4 border-slate-800">
-            <div className="font-medium flex items-center justify-between text-slate-100">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center justify-between">
                 Course category
-                <Button onClick={toggleEdit} variant="ghost" className="text-slate-200 hover:text-white hover:bg-slate-800">
+                <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -89,8 +89,7 @@ export const CategoryForm = ({
             {!isEditing && (
                 <p className={cn(
                     "text-sm mt-2",
-                    !initialData.categoryId && "text-slate-500 italic",
-                    "text-slate-300"
+                    !initialData.categoryId && "text-slate-500 italic"
                 )}>
                     {selectedOption?.label || "No category"}
                 </p>
@@ -112,17 +111,13 @@ export const CategoryForm = ({
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                                                <SelectTrigger>
                                                     <SelectValue placeholder="Select a category" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-slate-200">
+                                            <SelectContent>
                                                 {options.map((option) => (
-                                                    <SelectItem
-                                                        key={option.value}
-                                                        value={option.value}
-                                                        className="hover:bg-slate-700 focus:bg-slate-700 cursor-pointer"
-                                                    >
+                                                    <SelectItem key={option.value} value={option.value}>
                                                         {option.label}
                                                     </SelectItem>
                                                 ))}
@@ -137,8 +132,6 @@ export const CategoryForm = ({
                             <Button
                                 disabled={!isValid || isSubmitting}
                                 type="submit"
-                                // FIX: Changed button to White Background with Dark Text
-                                className="bg-slate-100 text-slate-900 hover:bg-slate-200"
                             >
                                 Save
                             </Button>
