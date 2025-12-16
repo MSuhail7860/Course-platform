@@ -1,9 +1,15 @@
 import { db } from "@/lib/db";
 import LandingPage from "@/components/landing-page";
+import { Category, Chapter, Course } from "@prisma/client";
 
 export default async function Home() {
   // Fetch courses from the database
-  let courses = [];
+  type CourseWithCategory = Course & {
+    category: Category | null;
+    chapters: Chapter[];
+  };
+
+  let courses: CourseWithCategory[] = [];
   try {
     courses = await db.course.findMany({
       where: {
