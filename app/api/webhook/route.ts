@@ -1,4 +1,3 @@
-
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
@@ -6,15 +5,9 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
 
-// Force Node runtime for Webhook signature verification
-// Edge runtime often has issues with buffered bodies needed for signature construction
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
 export async function POST(req: Request) {
     const body = await req.text();
-    const headerPayload = await headers();
-    const signature = headerPayload.get("Stripe-Signature") as string;
+    const signature = (await headers()).get("Stripe-Signature") as string;
 
     let event: Stripe.Event;
 
@@ -24,7 +17,6 @@ export async function POST(req: Request) {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
     }
@@ -33,6 +25,7 @@ export async function POST(req: Request) {
     const userId = session?.metadata?.userId;
     const courseId = session?.metadata?.courseId;
 
+    // Handle the specific event type: Checkout Completed
     if (event.type === "checkout.session.completed") {
         if (!userId || !courseId) {
             return new NextResponse(`Webhook Error: Missing metadata`, { status: 400 });
@@ -45,6 +38,7 @@ export async function POST(req: Request) {
             }
         });
     } else {
+        // Handle other event types if you need to (e.g. refund, subscription updated)
         return new NextResponse(`Webhook Error: Unhandled event type ${event.type}`, { status: 200 });
     }
 

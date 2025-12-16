@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+// Ensure this points to the provider file where we defined the hook/store earlier
 import { useConfettiStore } from "@/components/providers/confetti-provider";
 
 interface CourseActionsProps {
@@ -34,7 +35,7 @@ export const CourseActions = ({
             } else {
                 await axios.patch(`/api/courses/${courseId}/publish`);
                 toast.success("Course published");
-                confetti.onOpen();
+                confetti.onOpen(); // Triggers the confetti animation
             }
 
             router.refresh();
@@ -68,6 +69,7 @@ export const CourseActions = ({
                 disabled={disabled || isLoading}
                 variant="outline"
                 size="sm"
+            // Outline variant usually adapts well to dark mode automatically
             >
                 {isPublished ? "Unpublish" : "Publish"}
             </Button>

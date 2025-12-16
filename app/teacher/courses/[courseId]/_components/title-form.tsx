@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "sonner"; // or "react-hot-toast" depending on your setup
 import { useRouter } from "next/navigation";
 
 import {
@@ -61,10 +61,10 @@ export const TitleForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
-            <div className="font-medium flex items-center justify-between">
+        <div className="mt-6 border bg-slate-100 dark:bg-slate-900 rounded-md p-4"> {/* <--- FIXED BACKGROUND */}
+            <div className="font-medium flex items-center justify-between text-slate-900 dark:text-slate-100"> {/* <--- FIXED TEXT COLOR */}
                 Course title
-                <Button onClick={toggleEdit} variant="ghost">
+                <Button onClick={toggleEdit} variant="ghost" className="text-slate-900 dark:text-slate-100">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -76,16 +76,13 @@ export const TitleForm = ({
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-sm mt-2">
+                <p className="text-sm mt-2 text-slate-900 dark:text-slate-100"> {/* <--- FIXED TEXT */}
                     {initialData.title}
                 </p>
             )}
             {isEditing && (
                 <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-4 mt-4"
-                    >
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
                         <FormField
                             control={form.control}
                             name="title"
@@ -94,8 +91,9 @@ export const TitleForm = ({
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'Advanced Web Development'"
+                                            placeholder="e.g. 'Advanced web development'"
                                             {...field}
+                                            className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white" // <--- FIXED INPUT
                                         />
                                     </FormControl>
                                     <FormMessage />

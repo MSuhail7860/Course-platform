@@ -1,4 +1,3 @@
-
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
@@ -45,8 +44,10 @@ export async function POST(
             return new NextResponse("Not found", { status: 404 });
         }
 
-        if (!process.env.STRIPE_API_KEY || process.env.STRIPE_API_KEY.includes("sk_test_123")) {
-             await db.purchase.create({
+        // --- FREE COURSE LOGIC ---
+        // If price is 0 or null, skip Stripe and enroll immediately
+        if (course.price === 0 || course.price === null) {
+            await db.purchase.create({
                 data: {
                     courseId: courseId,
                     userId: user.id,
@@ -54,6 +55,7 @@ export async function POST(
             });
             return NextResponse.json({ url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1` });
         }
+        // -------------------------
 
         const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
             {
@@ -62,7 +64,7 @@ export async function POST(
                     currency: "USD",
                     product_data: {
                         name: course.title,
-                        description: course.description!,
+                        description: course.description || "Course description", // Added fallback to prevent crash
                     },
                     unit_amount: Math.round(course.price! * 100),
                 }

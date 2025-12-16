@@ -7,7 +7,12 @@ const TeacherLayout = async ({
 }: {
     children: React.ReactNode;
 }) => {
-    const session = await auth();
+    let session;
+    try {
+        session = await auth();
+    } catch {
+        session = null;
+    }
 
     if (!session?.user?.id) {
         return redirect("/");

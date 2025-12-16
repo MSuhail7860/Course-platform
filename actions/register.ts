@@ -5,8 +5,8 @@ import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 
 const RegisterSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+    email: z.string().email(),
+    password: z.string().min(6),
 });
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -19,22 +19,27 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     const { email, password } = validatedFields.data;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const existingUser = await db.user.findUnique({
-        where: {
-            email,
-        }
-    });
+    try {
+        const existingUser = await db.user.findUnique({
+            where: {
+                email,
+            }
+        });
 
-    if (existingUser) {
-        return { error: "Email already in use!" };
+        if (existingUser) {
+            return { error: "Email already in use!" };
+        }
+
+        await db.user.create({
+            data: {
+                email,
+                password: hashedPassword,
+            }
+        });
+    } catch (error) {
+        console.warn("Database unavailable during registration:", error);
+        return { error: "Service unavailable. Please try again later." };
     }
-
-    await db.user.create({
-        data: {
-            email,
-            password: hashedPassword,
-        }
-    });
 
     return { success: "User created!" };
 };

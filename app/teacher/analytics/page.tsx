@@ -7,7 +7,12 @@ import { DataCard } from "./_components/data-card";
 import { Chart } from "./_components/chart";
 
 const AnalyticsPage = async () => {
-    const session = await auth();
+    let session;
+    try {
+        session = await auth();
+    } catch {
+        session = null;
+    }
 
     if (!session?.user?.id) {
         return redirect("/");

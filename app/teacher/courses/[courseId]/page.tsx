@@ -17,7 +17,12 @@ const CourseIdPage = async ({
 }: {
     params: { courseId: string }
 }) => {
-    const session = await auth();
+    let session;
+    try {
+        session = await auth();
+    } catch {
+        session = null;
+    }
     const { courseId } = await params;
 
     if (!session?.user?.id) {

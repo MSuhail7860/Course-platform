@@ -64,10 +64,10 @@ export const DescriptionForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
-            <div className="font-medium flex items-center justify-between">
+        <div className="mt-6 border bg-slate-100 dark:bg-slate-900 rounded-md p-4"> {/* <--- FIXED BACKGROUND */}
+            <div className="font-medium flex items-center justify-between text-slate-900 dark:text-slate-100"> {/* <--- FIXED HEADER TEXT */}
                 Course description
-                <Button onClick={toggleEdit} variant="ghost">
+                <Button onClick={toggleEdit} variant="ghost" className="text-slate-900 dark:text-slate-100"> {/* <--- FIXED ICON COLOR */}
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -81,7 +81,8 @@ export const DescriptionForm = ({
             {!isEditing && (
                 <p className={cn(
                     "text-sm mt-2",
-                    !initialData.description && "text-slate-500 italic"
+                    !initialData.description && "text-slate-500 italic",
+                    initialData.description && "text-slate-900 dark:text-slate-100" // <--- FIXED DESCRIPTION TEXT
                 )}>
                     {initialData.description || "No description"}
                 </p>
@@ -102,6 +103,7 @@ export const DescriptionForm = ({
                                             disabled={isSubmitting}
                                             placeholder="e.g. 'This course is about...'"
                                             {...field}
+                                            className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white" // <--- FIXED INPUT
                                         />
                                     </FormControl>
                                     <FormMessage />

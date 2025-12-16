@@ -17,7 +17,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { FileUpload } from "@/components/file-upload";
 
 interface ChapterVideoFormProps {
@@ -64,7 +63,8 @@ export const ChapterVideoForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+        // Update 1: Main container dark mode
+        <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-slate-800 dark:text-slate-100">
             <div className="font-medium flex items-center justify-between">
                 Chapter video
                 <Button onClick={toggleEdit} variant="ghost">
@@ -87,17 +87,12 @@ export const ChapterVideoForm = ({
             </div>
             {!isEditing && (
                 !initialData.videoUrl ? (
-                    <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
+                    // Update 2: Placeholder background dark mode
+                    <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md dark:bg-slate-700">
                         <Video className="h-10 w-10 text-slate-500" />
                     </div>
                 ) : (
                     <div className="relative aspect-video mt-2 bg-black rounded-md flex items-center justify-center">
-                        {/* Simple video player placeholder for URL. 
-                 In a real app with S3/Mux, we'd use a player component.
-                 Since it's just a URL string, we can try to render it if it's a direct file, 
-                 or just show a link/icon if it's external (like YouTube). 
-                 Let's try a video tag for now, assuming direct MP4 or similar.
-             */}
                         <video
                             src={initialData.videoUrl}
                             controls
@@ -134,7 +129,7 @@ export const ChapterVideoForm = ({
                                     </FormItem>
                                 )}
                             />
-                            <div className="text-xs text-muted-foreground mt-4">
+                            <div className="text-xs text-muted-foreground mt-4 dark:text-slate-400">
                                 Enter a direct URL to a video file.
                             </div>
                             <Button

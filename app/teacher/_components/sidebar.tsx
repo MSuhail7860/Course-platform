@@ -22,7 +22,7 @@ export const TeacherSidebar = () => {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col w-full h-full border-r overflow-y-auto bg-white shadow-sm">
+        <div className="flex flex-col w-full h-full border-r overflow-y-auto bg-background shadow-sm">
             <div className="p-6">
                 <span className="text-xl font-bold">Teacher Mode</span>
             </div>

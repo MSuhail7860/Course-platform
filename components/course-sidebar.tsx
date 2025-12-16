@@ -19,7 +19,12 @@ export const CourseSidebar = async ({
     course,
     progressCount,
 }: CourseSidebarProps) => {
-    const session = await auth();
+    let session;
+    try {
+        session = await auth();
+    } catch {
+        session = null;
+    }
 
     // Basic check, in real app more robust access control needed here too
     // But strictly sidebar just renders links. Access is checked on page load.

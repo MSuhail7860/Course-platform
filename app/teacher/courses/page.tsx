@@ -5,7 +5,12 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 const CoursesPage = async () => {
-    const session = await auth();
+    let session;
+    try {
+        session = await auth();
+    } catch {
+        session = null;
+    }
 
     if (!session?.user?.id) {
         return redirect("/");

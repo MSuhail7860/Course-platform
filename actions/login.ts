@@ -34,6 +34,10 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       }
     }
 
-    throw error;
+    if ((error as any).message?.includes("NEXT_REDIRECT")) {
+      throw error;
+    }
+    console.warn("Login Error:", error);
+    return { error: "Service unavailable." };
   }
 };

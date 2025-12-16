@@ -21,6 +21,11 @@ const routes = [
         label: "Courses",
         href: "/admin/courses",
     },
+    {
+        icon: Users,
+        label: "Requests",
+        href: "/admin/requests",
+    },
 ];
 
 export const AdminSidebar = () => {

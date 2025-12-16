@@ -72,10 +72,10 @@ export const CategoryForm = ({
     const selectedOption = options.find((option) => option.value === initialData.categoryId);
 
     return (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
-            <div className="font-medium flex items-center justify-between">
+        <div className="mt-6 border bg-slate-100 dark:bg-slate-900 rounded-md p-4"> {/* <--- FIXED BACKGROUND */}
+            <div className="font-medium flex items-center justify-between text-slate-900 dark:text-slate-100"> {/* <--- FIXED HEADER TEXT */}
                 Course category
-                <Button onClick={toggleEdit} variant="ghost">
+                <Button onClick={toggleEdit} variant="ghost" className="text-slate-900 dark:text-slate-100"> {/* <--- FIXED BUTTON TEXT */}
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -89,7 +89,8 @@ export const CategoryForm = ({
             {!isEditing && (
                 <p className={cn(
                     "text-sm mt-2",
-                    !initialData.categoryId && "text-slate-500 italic"
+                    !initialData.categoryId && "text-slate-500 italic",
+                    initialData.categoryId && "text-slate-900 dark:text-slate-100" // <--- FIXED DISPLAY TEXT
                 )}>
                     {selectedOption?.label || "No category"}
                 </p>
@@ -111,7 +112,7 @@ export const CategoryForm = ({
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger>
+                                                <SelectTrigger className="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"> {/* <--- FIXED SELECT TRIGGER */}
                                                     <SelectValue placeholder="Select a category" />
                                                 </SelectTrigger>
                                             </FormControl>

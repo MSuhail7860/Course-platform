@@ -2,23 +2,15 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Pencil, PlusCircle, ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
-} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// 1. Import your custom FileUpload component
+import { FileUpload } from "@/components/file-upload";
 
 interface ImageFormProps {
     initialData: {
@@ -42,15 +34,6 @@ export const ImageForm = ({
     const toggleEdit = () => setIsEditing((current) => !current);
 
     const router = useRouter();
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            imageUrl: initialData.imageUrl || "",
-        },
-    });
-
-    const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
@@ -85,56 +68,40 @@ export const ImageForm = ({
                     )}
                 </Button>
             </div>
+
+            {/* VIEW MODE: Show the Image or the Icon */}
             {!isEditing && (
                 !initialData.imageUrl ? (
-                    <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
+                    <div key="no-image" className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
                         <ImageIcon className="h-10 w-10 text-slate-500" />
                     </div>
                 ) : (
-                    <div className="relative aspect-video mt-2">
-                        <Image
+                    <div key="has-image" className="relative aspect-video mt-2">
+                        {/* Using standard img tag to ensure local uploads display correctly */}
+                        <img
                             alt="Upload"
-                            fill
-                            className="object-cover rounded-md"
+                            className="object-cover rounded-md w-full h-full"
                             src={initialData.imageUrl}
                         />
                     </div>
                 )
             )}
+
+            {/* EDIT MODE: Show the Drag & Drop Zone */}
             {isEditing && (
-                <div className="mt-4">
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-4"
-                        >
-                            <FormField
-                                control={form.control}
-                                name="imageUrl"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                disabled={isSubmitting}
-                                                placeholder="e.g. 'https://images.unsplash.com/...'"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className="text-xs text-muted-foreground mt-4">
-                                16:9 aspect ratio recommended
-                            </div>
-                            <Button
-                                disabled={!isValid || isSubmitting}
-                                type="submit"
-                            >
-                                Save
-                            </Button>
-                        </form>
-                    </Form>
+                <div key="edit-mode">
+                    <FileUpload
+                        endpoint="courseImage"
+                        onChange={(url) => {
+                            if (url) {
+                                // Automatically save to DB when upload finishes
+                                onSubmit({ imageUrl: url });
+                            }
+                        }}
+                    />
+                    <div className="text-xs text-muted-foreground mt-4">
+                        16:9 aspect ratio recommended
+                    </div>
                 </div>
             )}
         </div>

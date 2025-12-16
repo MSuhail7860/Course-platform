@@ -34,7 +34,7 @@ export const ConfettiProvider = ({
 
     if (!isMounted) {
         return (
-             <ConfettiContext.Provider value={{ isOpen, onOpen, onClose }}>
+            <ConfettiContext.Provider value={{ isOpen, onOpen, onClose }}>
                 {children}
             </ConfettiContext.Provider>
         );
@@ -42,14 +42,17 @@ export const ConfettiProvider = ({
 
     return (
         <ConfettiContext.Provider value={{ isOpen, onOpen, onClose }}>
-            <ReactConfetti
-                className="pointer-events-none z-[100]"
-                numberOfPieces={isOpen ? 500 : 0}
-                recycle={false}
-                onConfettiComplete={() => {
-                    onClose();
-                }}
-            />
+            {/* CHANGE: Only render ReactConfetti if isOpen is true */}
+            {isOpen && (
+                <ReactConfetti
+                    className="pointer-events-none z-100"
+                    numberOfPieces={500}
+                    recycle={false}
+                    onConfettiComplete={() => {
+                        onClose();
+                    }}
+                />
+            )}
             {children}
         </ConfettiContext.Provider>
     )

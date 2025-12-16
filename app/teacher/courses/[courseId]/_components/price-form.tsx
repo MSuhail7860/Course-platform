@@ -63,10 +63,10 @@ export const PriceForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
-            <div className="font-medium flex items-center justify-between">
+        <div className="mt-6 border bg-slate-100 dark:bg-slate-900 rounded-md p-4"> {/* <--- FIXED BACKGROUND */}
+            <div className="font-medium flex items-center justify-between text-slate-900 dark:text-slate-100"> {/* <--- FIXED HEADER TEXT */}
                 Course price
-                <Button onClick={toggleEdit} variant="ghost">
+                <Button onClick={toggleEdit} variant="ghost" className="text-slate-900 dark:text-slate-100"> {/* <--- FIXED BUTTON TEXT */}
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
@@ -80,7 +80,8 @@ export const PriceForm = ({
             {!isEditing && (
                 <p className={cn(
                     "text-sm mt-2",
-                    !initialData.price && "text-slate-500 italic"
+                    !initialData.price && "text-slate-500 italic",
+                    initialData.price && "text-slate-900 dark:text-slate-100" // <--- FIXED PRICE TEXT
                 )}>
                     {initialData.price
                         ? new Intl.NumberFormat("en-US", {
@@ -110,6 +111,7 @@ export const PriceForm = ({
                                             placeholder="Set a price for your course"
                                             {...field}
                                             value={field.value ?? ""}
+                                            className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white" // <--- FIXED INPUT
                                         />
                                     </FormControl>
                                     <FormMessage />

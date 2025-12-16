@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as z from "zod";
@@ -9,7 +10,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Chapter, Course } from "@prisma/client";
-import Link from "next/link"; // Import Link
+import Link from "next/link";
 
 import {
     Form,
@@ -62,10 +63,10 @@ export const ChaptersForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
-            <div className="font-medium flex items-center justify-between">
+        <div className="mt-6 border bg-slate-100 dark:bg-slate-900 rounded-md p-4"> {/* <--- FIXED BACKGROUND */}
+            <div className="font-medium flex items-center justify-between text-slate-900 dark:text-slate-100"> {/* <--- FIXED HEADER TEXT */}
                 Course chapters
-                <Button onClick={toggleCreating} variant="ghost">
+                <Button onClick={toggleCreating} variant="ghost" className="text-slate-900 dark:text-slate-100"> {/* <--- FIXED BUTTON TEXT */}
                     {isCreating ? (
                         <>Cancel</>
                     ) : (
@@ -92,6 +93,7 @@ export const ChaptersForm = ({
                                             disabled={isSubmitting}
                                             placeholder="e.g. 'Introduction to the course'"
                                             {...field}
+                                            className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white" // <--- FIXED INPUT
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -110,12 +112,12 @@ export const ChaptersForm = ({
             {!isCreating && (
                 <div className={cn(
                     "text-sm mt-2",
-                    !initialData.chapters.length && "text-slate-500 italic"
+                    !initialData.chapters.length && "text-slate-500 dark:text-slate-400 italic" // <--- FIXED EMPTY TEXT
                 )}>
                     {!initialData.chapters.length && "No chapters"}
                     {initialData.chapters.map((chapter) => (
                         <Link key={chapter.id} href={`/teacher/courses/${courseId}/chapters/${chapter.id}`} className="block mb-2">
-                            <div className="flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md text-sm p-2 hover:bg-slate-300 transition cursor-pointer">
+                            <div className="flex items-center gap-x-2 bg-slate-200 dark:bg-slate-800 border-slate-200 dark:border-slate-800 border text-slate-700 dark:text-slate-200 rounded-md text-sm p-2 hover:bg-slate-300 dark:hover:bg-slate-700 transition cursor-pointer"> {/* <--- FIXED LIST ITEM */}
                                 {chapter.title}
                                 {chapter.isPublished && <span className="ml-auto text-xs bg-sky-700 text-white px-2 py-1 rounded-full">Published</span>}
                                 {!chapter.isPublished && <span className="ml-auto text-xs bg-slate-500 text-white px-2 py-1 rounded-full">Draft</span>}
