@@ -24,34 +24,39 @@ const AdminUsersPage = async () => {
         },
     });
 
-    return ( 
+    return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Users</h1>
-            <div className="border rounded-md p-4 bg-white">
+            {/* Added dark:text-white to ensure heading is visible */}
+            <h1 className="text-2xl font-bold mb-6 dark:text-white">Users</h1>
+
+            {/* Added dark:bg-neutral-900 and dark:border-neutral-800 to fix the white box */}
+            <div className="border rounded-md p-4 bg-white dark:bg-neutral-900 dark:border-neutral-800">
                 <Table>
                     <TableHeader>
-                        <TableRow>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>User ID</TableHead>
+                        <TableRow className="dark:border-neutral-800">
+                            <TableHead className="dark:text-slate-300">Email</TableHead>
+                            <TableHead className="dark:text-slate-300">Role</TableHead>
+                            <TableHead className="dark:text-slate-300">User ID</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.role}</TableCell>
-                                <TableCell className="font-mono text-xs text-muted-foreground">{user.id}</TableCell>
+                            <TableRow key={user.id} className="dark:border-neutral-800 dark:hover:bg-neutral-800/50">
+                                <TableCell className="dark:text-slate-200">{user.email}</TableCell>
+                                <TableCell className="dark:text-slate-200">{user.role}</TableCell>
+                                <TableCell className="font-mono text-xs text-muted-foreground dark:text-neutral-500">
+                                    {user.id}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </div>
-            <p className="text-xs text-muted-foreground mt-4">
+            <p className="text-xs text-muted-foreground mt-4 dark:text-neutral-500">
                 * To change roles, please access the database directly for now or I can add a server action if requested.
             </p>
         </div>
-     );
+    );
 }
- 
+
 export default AdminUsersPage;
