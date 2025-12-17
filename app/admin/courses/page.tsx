@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge"; // Assuming Badge exists or will perform fallback
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -29,7 +29,7 @@ const AdminCoursesPage = async () => {
         }
     });
 
-    return ( 
+    return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">All Courses ({courses.length})</h1>
             <div className="border rounded-md p-4 bg-white">
@@ -69,7 +69,7 @@ const AdminCoursesPage = async () => {
                 </Table>
             </div>
         </div>
-     );
+    );
 }
- 
+
 export default AdminCoursesPage;

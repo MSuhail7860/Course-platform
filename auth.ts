@@ -51,9 +51,14 @@ export const {
                     const user = await db.user.findUnique({ where: { email } });
                     if (!user || !user.password) return null;
                     const passwordsMatch = await bcrypt.compare(password, user.password);
-                    if (passwordsMatch) return user;
+                    if (passwordsMatch) {
+                        return {
+                            ...user,
+                            role: user.role as "ADMIN" | "TEACHER" | "STUDENT"
+                        };
+                    }
                 }
-                
+
                 return null;
             }
         })
