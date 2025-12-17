@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import LandingPage from "@/components/landing-page";
 import { Category, Chapter, Course } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   // Fetch courses from the database
